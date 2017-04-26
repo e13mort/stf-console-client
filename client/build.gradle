@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'application'
+apply plugin: 'distribution'
 apply plugin: 'com.jfrog.bintray'
 
 sourceCompatibility = 1.7
@@ -8,6 +9,7 @@ targetCompatibility = 1.7
 
 def ARTIFACT_ID = 'stf-console-client'
 def ARTIFACT_VERSION = '0.1.0'
+def SCRIPT_NAME = 'stf'
 
 buildscript {
     repositories {
@@ -36,6 +38,18 @@ dependencies {
 }
 
 mainClassName = "com.github.e13mort.stf.console.App"
+
+version ARTIFACT_VERSION
+
+distributions {
+    main {
+        baseName ARTIFACT_ID
+    }
+}
+
+startScripts {
+    applicationName SCRIPT_NAME
+}
 
 publishing {
     publications {
