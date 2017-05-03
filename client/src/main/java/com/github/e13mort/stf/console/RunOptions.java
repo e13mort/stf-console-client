@@ -7,6 +7,8 @@ class RunOptions {
     private static final String OPTION_PROPERTIES = "p";
     private static final String OPTION_FILTER_ABI = "abi";
     private static final String OPTION_FILTER_API = "api";
+    private static final String OPTION_FILTER_MIN_API = "minApi";
+    private static final String OPTION_FILTER_MAX_API = "maxApi";
     private static final String OPTION_FILTER_ACTIVE = "all";
     private static final String OPTION_COMMAND_LIST = "l";
     private static final String OPTION_COMMAND_CONNECT = "c";
@@ -35,6 +37,8 @@ class RunOptions {
                 .setAbi(line.getOptionValue(OPTION_FILTER_ABI))
                 .setAll(line.hasOption(OPTION_FILTER_ACTIVE))
                 .setApi(line.getOptionValue(OPTION_FILTER_API))
+                .setMinApi(line.getOptionValue(OPTION_FILTER_MIN_API))
+                .setMaxApi(line.getOptionValue(OPTION_FILTER_MAX_API))
                 .setCount(line.getOptionValue(OPTION_COUNT))
                 .setName(line.getOptionValue(OPTION_FILTER_NAME))
                 .createRunOptions();
@@ -59,6 +63,8 @@ class RunOptions {
         options.addOption(OPTION_COMMAND_CONNECT, "connect", false, "connect to devices");
         options.addOption(OPTION_FILTER_ACTIVE, "all", false, "Show all devices. By default only available devices are returned.");
         options.addOption(OPTION_FILTER_API, "api", true, "Filter by device api level");
+        options.addOption(OPTION_FILTER_MIN_API, "minApi", true, "Filter by device min api level");
+        options.addOption(OPTION_FILTER_MAX_API, "maxApi", true, "Filter by device max api level");
         options.addOption(OPTION_FILTER_ABI, "abi", true, "Filter by device abi architecture");
         options.addOption(OPTION_COUNT, "count", true, "Filter devices by count");
         options.addOption(OPTION_FILTER_NAME, "name", true, "Filter devices by its name");

@@ -8,6 +8,8 @@ class RunOptionsBuilder {
     private String abi;
     private boolean allDevices;
     private String api;
+    private String minApi;
+    private String maxApi;
     private String count;
     private String name;
     private boolean actionConnect;
@@ -56,12 +58,28 @@ class RunOptionsBuilder {
         return this;
     }
 
+    RunOptionsBuilder setMinApi(String minApi) {
+        this.minApi = minApi;
+        return this;
+    }
+
+    RunOptionsBuilder setMaxApi(String maxApi) {
+        this.maxApi = maxApi;
+        return this;
+    }
+
     private DevicesParams createDeviceParams() throws NumberFormatException {
         DevicesParams params = new DevicesParams();
         params.setAbi(abi);
         params.setAllDevices(allDevices);
         if (api != null) {
             params.setApiVersion(Integer.parseInt(api));
+        }
+        if (minApi != null) {
+            params.setMinApiVersion(Integer.parseInt(minApi));
+        }
+        if (maxApi != null) {
+            params.setMaxApiVersion(Integer.parseInt(maxApi));
         }
         if (count != null) {
             params.setCount(Integer.parseInt(count));

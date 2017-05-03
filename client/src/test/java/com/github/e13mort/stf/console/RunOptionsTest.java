@@ -84,6 +84,18 @@ public class RunOptionsTest {
         assertEquals(19, options.getDeviceParams().getApiVersion());
     }
 
+    @Test
+    public void testMinApiVersionIsValidInParameter() throws Exception {
+        RunOptions options = getRunOptions("-l -minApi 19");
+        assertEquals(19, options.getDeviceParams().getMinApiVersion());
+    }
+
+    @Test
+    public void testMaxApiVersionIsValidInParameter() throws Exception {
+        RunOptions options = getRunOptions("-l -maxApi 19");
+        assertEquals(19, options.getDeviceParams().getMaxApiVersion());
+    }
+
     @Test(expected = NumberFormatException.class)
     public void testExceptionIsThrownWhenApiIsInvalid() throws Exception {
         getRunOptions("-api not_a_number");
