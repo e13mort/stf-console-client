@@ -75,13 +75,13 @@ public class RunOptionsTest {
     @Test
     public void testApiVersionIsZeroInUnrelatedString() throws Exception {
         RunOptions options = getRunOptions("-l");
-        assertEquals(0, options.getDeviceParams().getOsVersion());
+        assertEquals(0, options.getDeviceParams().getApiVersion());
     }
 
     @Test
     public void testApiVersionIsValidInParameter() throws Exception {
         RunOptions options = getRunOptions("-l -api 19");
-        assertEquals(19, options.getDeviceParams().getOsVersion());
+        assertEquals(19, options.getDeviceParams().getApiVersion());
     }
 
     @Test(expected = NumberFormatException.class)

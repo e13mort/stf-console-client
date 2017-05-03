@@ -61,7 +61,7 @@ class RunOptionsBuilder {
         params.setAbi(abi);
         params.setAllDevices(allDevices);
         if (api != null) {
-            params.setOsVersion(Integer.parseInt(api));
+            params.setApiVersion(Integer.parseInt(api));
         }
         if (count != null) {
             params.setCount(Integer.parseInt(count));
