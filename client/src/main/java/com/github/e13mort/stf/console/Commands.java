@@ -14,6 +14,7 @@ class Commands {
         commandMap.put(RunOptions.Operation.UNKNOWN, new HelpCommand(options));
         commandMap.put(RunOptions.Operation.LIST, new ListCommand(client));
         commandMap.put(RunOptions.Operation.CONNECT, new ConnectCommand(client, adbRunner));
+        commandMap.put(RunOptions.Operation.DISCONNECT, new DisconnectCommand(client));
     }
 
     void run(RunOptions options) {

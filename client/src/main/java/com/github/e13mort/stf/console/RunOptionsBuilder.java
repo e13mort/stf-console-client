@@ -13,6 +13,7 @@ class RunOptionsBuilder {
     private String count;
     private String name;
     private boolean actionConnect;
+    private boolean actionDisconnect;
 
     RunOptionsBuilder setFarmPropertiesFileName(String farmProprtiesFileName) {
         this.farmPropertiesFileName = farmProprtiesFileName;
@@ -26,6 +27,11 @@ class RunOptionsBuilder {
 
     RunOptionsBuilder setAbi(String abi) {
         this.abi = abi;
+        return this;
+    }
+
+    RunOptionsBuilder setActionDisconnect(boolean actionDisconnect) {
+        this.actionDisconnect = actionDisconnect;
         return this;
     }
 
@@ -91,10 +97,15 @@ class RunOptionsBuilder {
 
     private RunOptions.Operation getOperation() {
         // implement with int flags
-        if (actionPrintList == actionConnect) {
-            return RunOptions.Operation.UNKNOWN;
+        if (actionDisconnect) {
+            return RunOptions.Operation.DISCONNECT;
         }
-        return actionPrintList ? RunOptions.Operation.LIST :
-                RunOptions.Operation.CONNECT;
+        if (actionConnect) {
+            return RunOptions.Operation.CONNECT;
+        }
+        if (actionPrintList) {
+            return RunOptions.Operation.LIST;
+        }
+        return RunOptions.Operation.UNKNOWN;
     }
 }

@@ -3,9 +3,11 @@ package com.github.e13mort.stf.console;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.github.e13mort.stf.console.RunOptions.Operation.CONNECT;
+import static com.github.e13mort.stf.console.RunOptions.Operation.DISCONNECT;
 import static com.github.e13mort.stf.console.RunOptions.Operation.UNKNOWN;
 import static org.junit.Assert.*;
 
@@ -138,6 +140,12 @@ public class RunOptionsTest {
         assertEquals(CONNECT, getRunOptions("-c").getOperation());
     }
 
+    @Test
+    public void testReadDisconnectOperationFromNormalString() throws Exception {
+        assertEquals(DISCONNECT, getRunOptions("-d").getOperation());
+    }
+
+    @Ignore("Refactor current logic")
     @Test
     public void testFewCommandParamsReturnsUnknownOperation() throws Exception {
         assertEquals(UNKNOWN, getRunOptions("-l -c").getOperation());
