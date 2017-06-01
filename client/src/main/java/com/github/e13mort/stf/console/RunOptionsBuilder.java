@@ -1,5 +1,7 @@
 package com.github.e13mort.stf.console;
 
+import com.github.e13mort.stf.adapter.filters.ProviderDescription;
+import com.github.e13mort.stf.adapter.filters.ProviderStringParser;
 import com.github.e13mort.stf.client.DevicesParams;
 
 class RunOptionsBuilder {
@@ -14,6 +16,7 @@ class RunOptionsBuilder {
     private String name;
     private boolean actionConnect;
     private boolean actionDisconnect;
+    private String rawProviderTemplate;
 
     RunOptionsBuilder setFarmPropertiesFileName(String farmProprtiesFileName) {
         this.farmPropertiesFileName = farmProprtiesFileName;
@@ -74,6 +77,11 @@ class RunOptionsBuilder {
         return this;
     }
 
+    RunOptionsBuilder setProviderTemplate(String rawProviderTemplate) {
+        this.rawProviderTemplate = rawProviderTemplate;
+        return this;
+    }
+
     private DevicesParams createDeviceParams() throws NumberFormatException {
         DevicesParams params = new DevicesParams();
         params.setAbi(abi);
@@ -91,8 +99,21 @@ class RunOptionsBuilder {
             params.setCount(Integer.parseInt(count));
         }
         params.setName(name);
+        if (rawProviderTemplate != null) {
+            setupProvider(params, rawProviderTemplate);
+        }
         // params.setDeviceId(null); - implement
         return params;
+    }
+
+    private void setupProvider(DevicesParams params, String template) {
+        ProviderStringParser parser = new ProviderStringParser();
+        try {
+            ProviderDescription description = parser.parse(template);
+            params.setProviderDescription(description);
+        } catch (Exception e) {
+            //todo log this
+        }
     }
 
     private RunOptions.Operation getOperation() {

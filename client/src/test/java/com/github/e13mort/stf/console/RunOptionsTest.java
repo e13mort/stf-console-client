@@ -151,6 +151,18 @@ public class RunOptionsTest {
         assertEquals(UNKNOWN, getRunOptions("-l -c").getOperation());
     }
 
+    @Test
+    public void testProviderDescriptionNotNullWithParameter() throws Exception {
+        RunOptions options = getRunOptions("-l -provider p1");
+        assertNotNull(options.getDeviceParams().getProviderDescription());
+    }
+
+    @Test
+    public void testProviderDescriptionNullWithoutParameter() throws Exception {
+        RunOptions options = getRunOptions("-l");
+        assertNull(options.getDeviceParams().getProviderDescription());
+    }
+
     private RunOptions getRunOptions(String str) throws ParseException {
         return RunOptions.create(options, str.split(" "));
     }
