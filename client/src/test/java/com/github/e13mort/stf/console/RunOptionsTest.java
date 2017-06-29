@@ -2,20 +2,19 @@ package com.github.e13mort.stf.console;
 
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
-import static com.github.e13mort.stf.console.RunOptions.Operation.CONNECT;
-import static com.github.e13mort.stf.console.RunOptions.Operation.DISCONNECT;
-import static com.github.e13mort.stf.console.RunOptions.Operation.UNKNOWN;
-import static org.junit.Assert.*;
+import static com.github.e13mort.stf.console.RunOptions.Operation.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RunOptionsTest {
 
     private Options options;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         options = RunOptions.createOptions();
     }
@@ -98,15 +97,14 @@ public class RunOptionsTest {
         assertEquals(19, options.getDeviceParams().getMaxApiVersion());
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void testExceptionIsThrownWhenApiIsInvalid() throws Exception {
-        getRunOptions("-api not_a_number");
+        assertThrows(NumberFormatException.class, test("-api not_a_number"));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testUnknownPropertyWillBreakHandling() throws Exception {
-        RunOptions options = getRunOptions("-api 21 -!!! -abi test_abi");
-        assertEquals("test_abi", options.getDeviceParams().getAbi());
+        assertThrows(Exception.class, test("-api 21 -!!! -abi test_abi"));
     }
 
     @Test
@@ -115,14 +113,14 @@ public class RunOptionsTest {
         assertEquals(10, options.getDeviceParams().getCount());
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void testInvalidCountPropertyThrowsAnException() throws Exception {
-        getRunOptions("-count not_a_number");
+        assertThrows(NumberFormatException.class, test("-count not_a_number"));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testVoidCountPropertyThrowsAnException() throws Exception {
-        getRunOptions("-count -l");
+        assertThrows(Exception.class, test("-count -l"));
     }
 
     @Test
@@ -130,9 +128,9 @@ public class RunOptionsTest {
         assertEquals("name", getRunOptions("-n name").getDeviceParams().getName());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testVoidNameThrowsAnException() throws Exception {
-        getRunOptions("-n -l");
+        assertThrows(Exception.class, test("-n -l"));
     }
 
     @Test
@@ -145,7 +143,7 @@ public class RunOptionsTest {
         assertEquals(DISCONNECT, getRunOptions("-d").getOperation());
     }
 
-    @Ignore("Refactor current logic")
+    @Disabled
     @Test
     public void testFewCommandParamsReturnsUnknownOperation() throws Exception {
         assertEquals(UNKNOWN, getRunOptions("-l -c").getOperation());
@@ -161,6 +159,15 @@ public class RunOptionsTest {
     public void testProviderDescriptionNullWithoutParameter() throws Exception {
         RunOptions options = getRunOptions("-l");
         assertNull(options.getDeviceParams().getProviderDescription());
+    }
+
+    private Executable test(final String str) {
+        return new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                getRunOptions(str);
+            }
+        };
     }
 
     private RunOptions getRunOptions(String str) throws ParseException {

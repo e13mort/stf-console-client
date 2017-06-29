@@ -3,6 +3,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'application'
 apply plugin: 'distribution'
 apply plugin: 'com.jfrog.bintray'
+apply from: '../junit.gradle'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -17,6 +18,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
     }
 }
 
@@ -24,16 +26,16 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
+    maven { url 'http://dl.bintray.com/e13mort/maven' }
 }
 
 dependencies {
-    compile 'com.github.e13mort:open-stf-client:0.2.0-SNAPSHOT'
+    compile 'com.github.e13mort:open-stf-client:0.2.0'
 
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'commons-cli:commons-cli:1.4'
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile "org.mockito:mockito-core:2.+"
 }
 

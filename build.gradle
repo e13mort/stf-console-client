@@ -10,6 +10,11 @@ buildscript {
             classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
         }
     }
+
+    project.ext {
+        junitApi = "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
+        junitRuntime = "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
+    }
 }
 
 allprojects {
