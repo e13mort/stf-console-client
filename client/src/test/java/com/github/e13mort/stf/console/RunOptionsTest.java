@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import static com.github.e13mort.stf.console.RunOptions.Operation.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RunOptionsTest {
@@ -125,7 +127,17 @@ public class RunOptionsTest {
 
     @Test
     public void testNamePropertyIsValid() throws Exception {
-        assertEquals("name", getRunOptions("-n name").getDeviceParams().getName());
+        assertLinesMatch(singletonList("name"), getRunOptions("-n name").getDeviceParams().getNames());
+    }
+
+    @Test
+    public void testFewNamesPropertyIsValid() throws Exception {
+        assertLinesMatch(asList("name1", "name2"), getRunOptions("-n name1,name2").getDeviceParams().getNames());
+    }
+
+    @Test
+    public void testFewNamesPropertyWithOneActual() throws Exception {
+        assertLinesMatch(singletonList("name"), getRunOptions("-n name,").getDeviceParams().getNames());
     }
 
     @Test

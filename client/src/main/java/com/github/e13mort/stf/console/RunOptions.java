@@ -1,7 +1,10 @@
 package com.github.e13mort.stf.console;
 
 import com.github.e13mort.stf.client.DevicesParams;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 class RunOptions {
     private static final String OPTION_PROPERTIES = "p";

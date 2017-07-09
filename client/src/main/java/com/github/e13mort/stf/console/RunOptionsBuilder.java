@@ -4,7 +4,11 @@ import com.github.e13mort.stf.adapter.filters.ProviderDescription;
 import com.github.e13mort.stf.adapter.filters.ProviderStringParser;
 import com.github.e13mort.stf.client.DevicesParams;
 
+import java.util.Arrays;
+import java.util.List;
+
 class RunOptionsBuilder {
+    private static final String DELIMITER = ",";
     private String farmPropertiesFileName;
     private boolean actionPrintList;
     private String abi;
@@ -98,12 +102,18 @@ class RunOptionsBuilder {
         if (count != null) {
             params.setCount(Integer.parseInt(count));
         }
-        params.setName(name);
+        if (name != null) {
+            params.setNames(getNames(name));
+        }
         if (rawProviderTemplate != null) {
             setupProvider(params, rawProviderTemplate);
         }
         // params.setDeviceId(null); - implement
         return params;
+    }
+
+    private List<String> getNames(String name) {
+        return Arrays.asList(name.split(DELIMITER));
     }
 
     private void setupProvider(DevicesParams params, String template) {
