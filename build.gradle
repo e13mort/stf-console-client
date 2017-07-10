@@ -14,6 +14,7 @@ buildscript {
     project.ext {
         junitApi = "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
         junitRuntime = "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
+        githubKey = project.getProperties().get('github_key', 'unknown_key')
     }
 }
 
