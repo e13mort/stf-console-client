@@ -21,6 +21,7 @@ class RunOptionsBuilder {
     private boolean actionConnect;
     private boolean actionDisconnect;
     private String rawProviderTemplate;
+    private String rawSerialNumberTemplate;
 
     RunOptionsBuilder setFarmPropertiesFileName(String farmProprtiesFileName) {
         this.farmPropertiesFileName = farmProprtiesFileName;
@@ -86,6 +87,11 @@ class RunOptionsBuilder {
         return this;
     }
 
+    RunOptionsBuilder setSerialNumberTemplate(String rawSerialNumberTemplate) {
+        this.rawSerialNumberTemplate = rawSerialNumberTemplate;
+        return this;
+    }
+
     private DevicesParams createDeviceParams() throws NumberFormatException {
         DevicesParams params = new DevicesParams();
         params.setAbi(abi);
@@ -108,6 +114,9 @@ class RunOptionsBuilder {
         if (rawProviderTemplate != null) {
             setupProvider(params, rawProviderTemplate);
         }
+        if (rawSerialNumberTemplate != null) {
+            setupSerialNumber(params, rawSerialNumberTemplate);
+        }
         // params.setDeviceId(null); - implement
         return params;
     }
@@ -116,13 +125,26 @@ class RunOptionsBuilder {
         return Arrays.asList(name.split(DELIMITER));
     }
 
+    private void setupSerialNumber(DevicesParams params, String rawSerialNumberTemplate) {
+        StringsFilterDescription description = getStringsFilterDescription(rawSerialNumberTemplate);
+        if (description != null) {
+            params.setSerialFilterDescription(description);
+        }
+    }
+
     private void setupProvider(DevicesParams params, String template) {
-        StringsFilterParser parser = new StringsFilterParser();
-        try {
-            StringsFilterDescription description = parser.parse(template);
+        StringsFilterDescription description = getStringsFilterDescription(template);
+        if (description != null) {
             params.setProviderFilterDescription(description);
+        }
+    }
+
+    private StringsFilterDescription getStringsFilterDescription(String template) {
+        try {
+            return new StringsFilterParser().parse(template);
         } catch (Exception e) {
             //todo log this
+            return null;
         }
     }
 

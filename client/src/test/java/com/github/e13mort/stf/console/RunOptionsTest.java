@@ -173,6 +173,18 @@ public class RunOptionsTest {
         assertNull(options.getDeviceParams().getProviderFilterDescription());
     }
 
+    @Test
+    void testSerialNumberDescriptionNotNullWithParameter() throws ParseException {
+        RunOptions runOptions = getRunOptions("-l -sn serial1,serial2");
+        assertNotNull(runOptions.getDeviceParams().getSerialFilterDescription());
+    }
+
+    @Test
+    void testSerialNumberDescriptionNullWithoutParameter() throws ParseException {
+        RunOptions runOptions = getRunOptions("-l");
+        assertNull(runOptions.getDeviceParams().getSerialFilterDescription());
+    }
+
     private Executable test(final String str) {
         return new Executable() {
             @Override
