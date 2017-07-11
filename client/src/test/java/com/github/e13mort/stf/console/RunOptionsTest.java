@@ -164,13 +164,13 @@ public class RunOptionsTest {
     @Test
     public void testProviderDescriptionNotNullWithParameter() throws Exception {
         RunOptions options = getRunOptions("-l -provider p1");
-        assertNotNull(options.getDeviceParams().getProviderDescription());
+        assertNotNull(options.getDeviceParams().getProviderFilterDescription());
     }
 
     @Test
     public void testProviderDescriptionNullWithoutParameter() throws Exception {
         RunOptions options = getRunOptions("-l");
-        assertNull(options.getDeviceParams().getProviderDescription());
+        assertNull(options.getDeviceParams().getProviderFilterDescription());
     }
 
     private Executable test(final String str) {

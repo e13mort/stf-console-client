@@ -1,7 +1,7 @@
 package com.github.e13mort.stf.console;
 
-import com.github.e13mort.stf.adapter.filters.ProviderDescription;
-import com.github.e13mort.stf.adapter.filters.ProviderStringParser;
+import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
+import com.github.e13mort.stf.adapter.filters.StringsFilterParser;
 import com.github.e13mort.stf.client.DevicesParams;
 
 import java.util.Arrays;
@@ -117,10 +117,10 @@ class RunOptionsBuilder {
     }
 
     private void setupProvider(DevicesParams params, String template) {
-        ProviderStringParser parser = new ProviderStringParser();
+        StringsFilterParser parser = new StringsFilterParser();
         try {
-            ProviderDescription description = parser.parse(template);
-            params.setProviderDescription(description);
+            StringsFilterDescription description = parser.parse(template);
+            params.setProviderFilterDescription(description);
         } catch (Exception e) {
             //todo log this
         }
