@@ -1,5 +1,6 @@
 package com.github.e13mort.stf.console;
 
+import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.BeforeEach;
@@ -127,17 +128,20 @@ public class RunOptionsTest {
 
     @Test
     public void testNamePropertyIsValid() throws Exception {
-        assertLinesMatch(singletonList("name"), getRunOptions("-n name").getDeviceParams().getNames());
+        StringsFilterDescription description = getRunOptions("-n name").getDeviceParams().getNameFilterDescription();
+        assertLinesMatch(singletonList("name"), description.getTemplates());
     }
 
     @Test
     public void testFewNamesPropertyIsValid() throws Exception {
-        assertLinesMatch(asList("name1", "name2"), getRunOptions("-n name1,name2").getDeviceParams().getNames());
+        StringsFilterDescription description = getRunOptions("-n name1,name2").getDeviceParams().getNameFilterDescription();
+        assertLinesMatch(asList("name1", "name2"), description.getTemplates());
     }
 
     @Test
     public void testFewNamesPropertyWithOneActual() throws Exception {
-        assertLinesMatch(singletonList("name"), getRunOptions("-n name,").getDeviceParams().getNames());
+        StringsFilterDescription description = getRunOptions("-n name,").getDeviceParams().getNameFilterDescription();
+        assertLinesMatch(singletonList("name"), description.getTemplates());
     }
 
     @Test

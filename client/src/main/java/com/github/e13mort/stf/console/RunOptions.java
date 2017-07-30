@@ -47,7 +47,7 @@ class RunOptions {
                 .setMinApi(line.getOptionValue(OPTION_FILTER_MIN_API))
                 .setMaxApi(line.getOptionValue(OPTION_FILTER_MAX_API))
                 .setCount(line.getOptionValue(OPTION_COUNT))
-                .setName(line.getOptionValue(OPTION_FILTER_NAME))
+                .setRawNameTemplate(line.getOptionValue(OPTION_FILTER_NAME))
                 .setProviderTemplate(line.getOptionValue(OPTION_FILTER_PROVIDER_NAME))
                 .setSerialNumberTemplate(line.getOptionValue(OPTION_FILTER_SERIAL_NUMBER))
                 .createRunOptions();

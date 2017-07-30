@@ -4,11 +4,7 @@ import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
 import com.github.e13mort.stf.adapter.filters.StringsFilterParser;
 import com.github.e13mort.stf.client.DevicesParams;
 
-import java.util.Arrays;
-import java.util.List;
-
 class RunOptionsBuilder {
-    private static final String DELIMITER = ",";
     private String farmPropertiesFileName;
     private boolean actionPrintList;
     private String abi;
@@ -17,7 +13,7 @@ class RunOptionsBuilder {
     private String minApi;
     private String maxApi;
     private String count;
-    private String name;
+    private String rawNameTemplate;
     private boolean actionConnect;
     private boolean actionDisconnect;
     private String rawProviderTemplate;
@@ -62,8 +58,8 @@ class RunOptionsBuilder {
         return this;
     }
 
-    RunOptionsBuilder setName(String name) {
-        this.name = name;
+    RunOptionsBuilder setRawNameTemplate(String rawNameTemplate) {
+        this.rawNameTemplate = rawNameTemplate;
         return this;
     }
 
@@ -108,8 +104,8 @@ class RunOptionsBuilder {
         if (count != null) {
             params.setCount(Integer.parseInt(count));
         }
-        if (name != null) {
-            params.setNames(getNames(name));
+        if (rawNameTemplate != null) {
+            setupNames(params, rawNameTemplate);
         }
         if (rawProviderTemplate != null) {
             setupProvider(params, rawProviderTemplate);
@@ -119,10 +115,6 @@ class RunOptionsBuilder {
         }
         // params.setDeviceId(null); - implement
         return params;
-    }
-
-    private List<String> getNames(String name) {
-        return Arrays.asList(name.split(DELIMITER));
     }
 
     private void setupSerialNumber(DevicesParams params, String rawSerialNumberTemplate) {
@@ -136,6 +128,13 @@ class RunOptionsBuilder {
         StringsFilterDescription description = getStringsFilterDescription(template);
         if (description != null) {
             params.setProviderFilterDescription(description);
+        }
+    }
+
+    private void setupNames(DevicesParams params, String template) {
+        StringsFilterDescription description = getStringsFilterDescription(template);
+        if (description != null) {
+            params.setNameFilterDescription(description);
         }
     }
 
