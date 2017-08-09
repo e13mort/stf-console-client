@@ -1,15 +1,22 @@
-package com.github.e13mort.stf.console;
+package com.github.e13mort.stf.console.commands;
 
+import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 import com.github.e13mort.stf.client.FarmClient;
+import com.github.e13mort.stf.console.AdbRunner;
 import io.reactivex.Notification;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
 import java.io.IOException;
 
-class ConnectCommand implements Commands.Command {
+@Parameters(commandDescription = "Connect to devices")
+class ConnectCommand implements CommandContainer.Command {
     private final FarmClient client;
     private final AdbRunner adbRunner;
+
+    @ParametersDelegate
+    private ConsoleDeviceParamsImpl params = new ConsoleDeviceParamsImpl();
 
     ConnectCommand(FarmClient client, AdbRunner adbRunner) {
         this.client = client;
@@ -17,8 +24,8 @@ class ConnectCommand implements Commands.Command {
     }
 
     @Override
-    public void execute(RunOptions options) {
-        client.connectToDevices(options.getDeviceParams())
+    public void execute() {
+        client.connectToDevices(params)
                 .subscribe(new ConnectionNotificationSubscriber(adbRunner), new ThrowableConsumer());
     }
 

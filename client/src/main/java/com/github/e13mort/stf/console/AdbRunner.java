@@ -2,7 +2,7 @@ package com.github.e13mort.stf.console;
 
 import java.io.*;
 
-class AdbRunner {
+public class AdbRunner {
     private static final String ADB_DIRECTORY = "platform-tools";
     private final String androidSdkPath;
     private static final String TAG_ADB = "ADB";
@@ -20,12 +20,6 @@ class AdbRunner {
                 .directory(adb)
                 .start();
         runProcess(exec);
-    }
-
-    public void runCommand(String command) throws IOException {
-        command = String.format("%s/%s/ %s", androidSdkPath, ADB_DIRECTORY, command.trim());
-        final Process process = Runtime.getRuntime().exec(command);
-        runProcess(process);
     }
 
     private void runProcess(Process process) throws IOException {

@@ -1,22 +1,26 @@
-package com.github.e13mort.stf.console;
+package com.github.e13mort.stf.console.commands;
 
-import com.github.e13mort.stf.client.DevicesParams;
+import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.model.device.Device;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
-class ListCommand implements Commands.Command {
+@Parameters(commandDescription = "Print list of available devices")
+class ListCommand implements CommandContainer.Command {
     public static final String UNKNOWN_DEVICE_NAME = "<Unknown>";
     private final FarmClient client;
+
+    @ParametersDelegate
+    private ConsoleDeviceParamsImpl params = new ConsoleDeviceParamsImpl();
 
     ListCommand(FarmClient client) {
         this.client = client;
     }
 
     @Override
-    public void execute(RunOptions options) {
-        DevicesParams params = options.getDeviceParams();
+    public void execute() {
         client.getDevices(params).subscribe(new Consumer<Device>() {
             @Override
             public void accept(@NonNull Device device) throws Exception {
