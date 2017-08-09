@@ -155,7 +155,7 @@ class StfCommanderTest {
     @ParameterizedTest(name = "Command is {0}")
     @EnumSource(DeviceParamsProducingCommand.class)
     void testNamePropertyIsValid(DeviceParamsProducingCommand source) throws Exception {
-        DevicesParams deviceParams = runDeviceParamsTest(source, "-n name");
+        DevicesParams deviceParams = runDeviceParamsTest(source, "-name name");
         StringsFilterDescription description = deviceParams.getNameFilterDescription();
         assertLinesMatch(singletonList("name"), description.getTemplates());
     }
@@ -164,7 +164,7 @@ class StfCommanderTest {
     @ParameterizedTest(name = "Command is {0}")
     @EnumSource(DeviceParamsProducingCommand.class)
     void testFewNamesPropertyIsValid(DeviceParamsProducingCommand source) throws Exception {
-        DevicesParams deviceParams = runDeviceParamsTest(source, "-n name1,name2");
+        DevicesParams deviceParams = runDeviceParamsTest(source, "-name name1,name2");
         StringsFilterDescription description = deviceParams.getNameFilterDescription();
         assertLinesMatch(asList("name1", "name2"), description.getTemplates());
     }
@@ -202,7 +202,7 @@ class StfCommanderTest {
     @ParameterizedTest(name = "Command is {0}")
     @EnumSource(DeviceParamsProducingCommand.class)
     void testSerialNumberDescriptionNotNullWithParameter(DeviceParamsProducingCommand source) throws IOException, UnknownCommandException {
-        DevicesParams params = runDeviceParamsTest(source, "-sn serial1,serial2");
+        DevicesParams params = runDeviceParamsTest(source, "-serial serial1,serial2");
         assertNotNull(params.getSerialFilterDescription());
     }
 

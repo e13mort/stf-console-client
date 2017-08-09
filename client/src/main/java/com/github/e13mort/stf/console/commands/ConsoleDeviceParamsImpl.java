@@ -17,11 +17,11 @@ public class ConsoleDeviceParamsImpl implements DevicesParams {
     private int maxApiVersion;
     @Parameter(names = "-count", description = "Filter devices by count")
     private int count;
-    @Parameter(names = "-n", description = "Filter devices by its name", converter = FilterDescriptionConverterImpl.class)
+    @Parameter(names = "-name", description = "Filter devices by its name", converter = FilterDescriptionConverterImpl.class)
     private StringsFilterDescription nameFilterDescription;
     @Parameter(names = "-provider", description = "Filter devices by provider", converter = FilterDescriptionConverterImpl.class)
     private StringsFilterDescription providerFilterDescription;
-    @Parameter(names = "-sn", description = "Filter devices by serial number", converter = FilterDescriptionConverterImpl.class)
+    @Parameter(names = "-serial", description = "Filter devices by serial number", converter = FilterDescriptionConverterImpl.class)
     private StringsFilterDescription serialFilterDescription;
 
     @Override
