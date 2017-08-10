@@ -4,12 +4,10 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.model.device.Device;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 @Parameters(commandDescription = "Print list of available devices")
 class ListCommand implements CommandContainer.Command {
-    public static final String UNKNOWN_DEVICE_NAME = "<Unknown>";
+    private static final String UNKNOWN_DEVICE_NAME = "<Unknown>";
     private final FarmClient client;
 
     @ParametersDelegate
@@ -21,17 +19,7 @@ class ListCommand implements CommandContainer.Command {
 
     @Override
     public void execute() {
-        client.getDevices(params).subscribe(new Consumer<Device>() {
-            @Override
-            public void accept(@NonNull Device device) throws Exception {
-                print(device);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                print(throwable);
-            }
-        });
+        client.getDevices(params).subscribe(this::print, this::print);
     }
 
     private void print(Device device) {

@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameters;
 import com.github.e13mort.stf.client.FarmClient;
 import io.reactivex.Notification;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 @Parameters(commandDescription = "Disconnect from all of currently connected devices")
 class DisconnectCommand implements CommandContainer.Command {
@@ -16,16 +15,14 @@ class DisconnectCommand implements CommandContainer.Command {
 
     @Override
     public void execute() {
-        client.disconnectFromAllDevices().subscribe(new Consumer<Notification<String>>() {
-            @Override
-            public void accept(@NonNull Notification<String> stringNotification) throws Exception {
-                System.out.println("Disconnected from " + stringNotification.getValue());
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                System.err.println(throwable.getMessage());
-            }
-        });
+        client.disconnectFromAllDevices().subscribe(this::handle, this::handle);
+    }
+
+    private void handle(@NonNull Throwable throwable) {
+        System.err.println(throwable.getMessage());
+    }
+
+    private void handle(@NonNull Notification<String> stringNotification) {
+        System.out.println("Disconnected from " + stringNotification.getValue());
     }
 }

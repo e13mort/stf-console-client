@@ -4,9 +4,10 @@ apply plugin: 'application'
 apply plugin: 'distribution'
 apply from: '../junit.gradle'
 apply plugin: 'co.riiid.gradle'
+apply plugin: 'me.tatarka.retrolambda'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 def ARTIFACT_ID = 'stf-console-client'
 def ARTIFACT_VERSION = '0.3.0'
@@ -20,6 +21,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
         classpath 'co.riiid:gradle-github-plugin:0.4.2'
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     }
 }
 
@@ -75,4 +77,10 @@ github {
             "client/build/distributions/stf-console-client-${ARTIFACT_VERSION}.tar",
             "client/build/distributions/stf-console-client-${ARTIFACT_VERSION}.zip"
     ]
+}
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_7
+    defaultMethods true
+    incremental true
 }
