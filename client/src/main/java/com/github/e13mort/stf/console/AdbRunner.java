@@ -14,7 +14,12 @@ public class AdbRunner {
         this.androidSdkPath = androidSdkPath;
     }
 
-    public void runComplexCommand(String... params) throws IOException {
+    public void connectToDevice(String connectionUrl) throws IOException {
+        runComplexCommand("adb", "connect", connectionUrl);
+        runComplexCommand("adb", "wait-for-device");
+    }
+
+    private void runComplexCommand(String... params) throws IOException {
         File adb = new File(androidSdkPath + File.separator + ADB_DIRECTORY);
         Process exec = new ProcessBuilder(params)
                 .directory(adb)

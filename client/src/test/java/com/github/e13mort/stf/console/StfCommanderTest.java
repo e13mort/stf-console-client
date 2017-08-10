@@ -27,11 +27,13 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class StfCommanderTest {
 
+    private static final String TEST_DEVICE_REMOTE = "127.0.0.1:15500";
     @Mock
     private FarmClient farmClient;
     @Mock
@@ -40,6 +42,8 @@ class StfCommanderTest {
     private HelpCommandCreator helpCommandCreator;
     @Mock
     private CommandContainer.Command helpCommand;
+    @Mock
+    private Device myDevice;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -48,6 +52,8 @@ class StfCommanderTest {
         when(farmClient.connectToDevices(any(DevicesParams.class))).thenReturn(Flowable.<Notification<String>>empty());
         when(farmClient.disconnectFromAllDevices()).thenReturn(Flowable.<Notification<String>>empty());
         when(helpCommandCreator.createHelpCommand(any(JCommander.class))).thenReturn(helpCommand);
+        when(farmClient.getMyDevices()).thenReturn(Flowable.fromArray(myDevice));
+        when(myDevice.getRemoteConnectUrl()).thenReturn(TEST_DEVICE_REMOTE);
     }
 
     @DisplayName("Command without params should be called with non null DeviceParams object")
@@ -204,6 +210,13 @@ class StfCommanderTest {
     void testSerialNumberDescriptionNotNullWithParameter(DeviceParamsProducingCommand source) throws IOException, UnknownCommandException {
         DevicesParams params = runDeviceParamsTest(source, "-serial serial1,serial2");
         assertNotNull(params.getSerialFilterDescription());
+    }
+
+    @DisplayName("Command connect with '--my' parameter will connect to an active device")
+    @Test
+    void testConnectToMyDevice() throws IOException, UnknownCommandException {
+        createCommander("connect --my").execute();
+        verify(adbRunner).connectToDevice(eq(TEST_DEVICE_REMOTE));
     }
 
     @Test
