@@ -1,5 +1,5 @@
-# stf-console-client
-A console client for the STF
+# STF console client
+A console client for the [Smartphone Test Farm](https://github.com/openstf/stf) service
 
 ## Download
 [Latest version](https://github.com/e13mort/stf-console-client/releases/latest)
