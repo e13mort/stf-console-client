@@ -8,7 +8,15 @@ A console client for the STF
 
 ## Configuration
 
-todo:
+* Download and extract an artifact from "releases" page into some target directory
+* Create file "farm.properties" either in your home directory or in the target app directory
+* Add following properties into the file:
+
+        stf.url=<your_farm_url>/api/v1/
+        stf.key=<token created in 'Settings/Keys/Access Tokens' seciton>
+        stf.timeout=<farm connection timeout in seconds, eg. 60>
+        android_sdk=<path to android sdk directory>
+* Optionally, add the app's directory into your PATH environment var
 
 ## Usage
 stf [command] [command options]
