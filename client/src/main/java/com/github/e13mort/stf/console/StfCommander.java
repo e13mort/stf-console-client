@@ -19,7 +19,7 @@ public class StfCommander {
     }
 
     static StfCommander create(StfCommanderContext context, HelpCommandCreator commandCreator, String... args) throws IOException {
-        CommandContainer commandContainer = new CommandContainer(context.getClient(), context.getAdbRunner());
+        CommandContainer commandContainer = new CommandContainer(context.getClient(), context.getAdbRunner(), context.getCache());
         JCommander commander = createCommander(commandContainer, args);
         return new StfCommander(commander.getParsedCommand(), commandContainer, commandCreator.createHelpCommand(commander));
     }

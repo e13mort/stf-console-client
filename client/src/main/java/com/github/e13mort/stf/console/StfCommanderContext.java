@@ -2,6 +2,7 @@ package com.github.e13mort.stf.console;
 
 import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.client.FarmInfo;
+import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,10 +14,12 @@ class StfCommanderContext {
 
     private final FarmClient client;
     private final AdbRunner adbRunner;
+    private DeviceListCache cache;
 
-    public StfCommanderContext(FarmClient client, AdbRunner adbRunner) {
+    StfCommanderContext(FarmClient client, AdbRunner adbRunner, DeviceListCache cache) {
         this.client = client;
         this.adbRunner = adbRunner;
+        this.cache = cache;
     }
 
     public FarmClient getClient() {
@@ -27,11 +30,16 @@ class StfCommanderContext {
         return adbRunner;
     }
 
+    public DeviceListCache getCache() {
+        return cache;
+    }
+
     public static StfCommanderContext create() throws IOException {
         FarmInfo farmInfo = createFarmInfo();
         FarmClient client = FarmClient.create(farmInfo);
         AdbRunner adbRunner = new AdbRunner(farmInfo.getSdkPath());
-        return new StfCommanderContext(client, adbRunner);
+        DeviceListCache cache = DeviceListCache.getCache();
+        return new StfCommanderContext(client, adbRunner, cache);
     }
 
     private static FarmInfo createFarmInfo() throws IOException {

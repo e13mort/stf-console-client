@@ -2,6 +2,7 @@ package com.github.e13mort.stf.console.commands;
 
 import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.console.AdbRunner;
+import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import com.github.e13mort.stf.console.commands.devices.DevicesCommand;
 
 import java.util.Collection;
@@ -12,9 +13,9 @@ public class CommandContainer {
 
     private Map<String, Command> commandMap = new HashMap<>();
 
-    public CommandContainer(final FarmClient client, AdbRunner adbRunner) {
-        commandMap.put("devices", new DevicesCommand(client));
-        commandMap.put("connect", new ConnectCommand(client, adbRunner));
+    public CommandContainer(final FarmClient client, AdbRunner adbRunner, DeviceListCache cache) {
+        commandMap.put("devices", new DevicesCommand(client, cache));
+        commandMap.put("connect", new ConnectCommand(client, adbRunner, cache));
         commandMap.put("disconnect", new DisconnectCommand(client));
     }
 

@@ -8,9 +8,9 @@ import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.console.commands.CommandContainer;
 import com.github.e13mort.stf.console.commands.HelpCommandCreator;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
+import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import com.github.e13mort.stf.model.device.Device;
 import io.reactivex.Flowable;
-import io.reactivex.Notification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -39,6 +40,11 @@ class StfCommanderTest {
     @Mock
     private AdbRunner adbRunner;
     @Mock
+    private DeviceListCache cache;
+    @Mock
+    private DeviceListCache.CacheTransaction cacheTransaction;
+
+    @Mock
     private HelpCommandCreator helpCommandCreator;
     @Mock
     private CommandContainer.Command helpCommand;
@@ -48,12 +54,14 @@ class StfCommanderTest {
     @BeforeEach
     void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
-        when(farmClient.getDevices(any(DevicesParams.class))).thenReturn(Flowable.<Device>empty());
-        when(farmClient.connectToDevices(any(DevicesParams.class))).thenReturn(Flowable.<Notification<String>>empty());
-        when(farmClient.disconnectFromAllDevices()).thenReturn(Flowable.<Notification<String>>empty());
+        when(farmClient.getDevices(any(DevicesParams.class))).thenReturn(Flowable.empty());
+        when(farmClient.connectToDevices(any(DevicesParams.class))).thenReturn(Flowable.empty());
+        when(farmClient.disconnectFromAllDevices()).thenReturn(Flowable.empty());
         when(helpCommandCreator.createHelpCommand(any(JCommander.class))).thenReturn(helpCommand);
         when(farmClient.getMyDevices()).thenReturn(Flowable.fromArray(myDevice));
         when(myDevice.getRemoteConnectUrl()).thenReturn(TEST_DEVICE_REMOTE);
+        when(cache.beginTransaction()).thenReturn(cacheTransaction);
+        when(cache.getCachedFiles()).thenReturn(Collections.emptyList());
     }
 
     @DisplayName("Command without params should be called with non null DeviceParams object")
@@ -239,24 +247,10 @@ class StfCommanderTest {
     enum DeviceParamsProducingCommand {DEVICES, CONNECT}
 
     private Executable test(final DeviceParamsProducingCommand source, final String str) {
-        return new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                runDeviceParamsTest(source, str);
-            }
-        };
-    }
-
-    private Executable test(@SuppressWarnings("SameParameterValue") final String str) {
-        return new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                createCommander(str).execute();
-            }
-        };
+        return () -> runDeviceParamsTest(source, str);
     }
 
     private StfCommander createCommander(String str) throws IOException {
-        return StfCommander.create(new StfCommanderContext(farmClient, adbRunner), helpCommandCreator, str.split(" "));
+        return StfCommander.create(new StfCommanderContext(farmClient, adbRunner, cache), helpCommandCreator, str.split(" "));
     }
 }
