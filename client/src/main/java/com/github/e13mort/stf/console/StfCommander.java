@@ -4,6 +4,7 @@ import com.beust.jcommander.JCommander;
 import com.github.e13mort.stf.console.commands.CommandContainer;
 import com.github.e13mort.stf.console.commands.HelpCommandCreator;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
+import io.reactivex.Completable;
 
 import java.io.IOException;
 
@@ -39,12 +40,17 @@ public class StfCommander {
         return commander;
     }
 
-    void execute() throws UnknownCommandException {
+    void execute() {
         CommandContainer.Command command = chooseCommand();
-        if (command == null) {
-            throw new UnknownCommandException(commandName);
+        if (command != null) {
+            run(command.execute());
+        } else {
+            errorHandler.handle(new UnknownCommandException(commandName));
         }
-        command.execute().subscribe(() -> {}, errorHandler::handle);
+    }
+
+    private void run(Completable completable) {
+        completable.subscribe(() -> {}, errorHandler::handle);
     }
 
     private CommandContainer.Command chooseCommand() {
