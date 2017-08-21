@@ -2,6 +2,7 @@ package com.github.e13mort.stf.console.commands;
 
 import com.beust.jcommander.Parameters;
 import com.github.e13mort.stf.client.FarmClient;
+import io.reactivex.Completable;
 import io.reactivex.Notification;
 import io.reactivex.annotations.NonNull;
 
@@ -14,12 +15,8 @@ class DisconnectCommand implements CommandContainer.Command {
     }
 
     @Override
-    public void execute() {
-        client.disconnectFromAllDevices().subscribe(this::handle, this::handle);
-    }
-
-    private void handle(@NonNull Throwable throwable) {
-        System.err.println(throwable.getMessage());
+    public Completable execute() {
+        return Completable.fromPublisher(client.disconnectFromAllDevices().doOnNext(this::handle));
     }
 
     private void handle(@NonNull Notification<String> stringNotification) {

@@ -10,6 +10,7 @@ import com.github.e13mort.stf.console.commands.HelpCommandCreator;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
 import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import com.github.e13mort.stf.model.device.Device;
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,6 +58,7 @@ class StfCommanderTest {
         when(farmClient.getDevices(any(DevicesParams.class))).thenReturn(Flowable.empty());
         when(farmClient.connectToDevices(any(DevicesParams.class))).thenReturn(Flowable.empty());
         when(farmClient.disconnectFromAllDevices()).thenReturn(Flowable.empty());
+        when(helpCommand.execute()).thenReturn(Completable.complete());
         when(helpCommandCreator.createHelpCommand(any(JCommander.class))).thenReturn(helpCommand);
         when(farmClient.getMyDevices()).thenReturn(Flowable.fromArray(myDevice));
         when(myDevice.getRemoteConnectUrl()).thenReturn(TEST_DEVICE_REMOTE);
@@ -251,6 +253,6 @@ class StfCommanderTest {
     }
 
     private StfCommander createCommander(String str) throws IOException {
-        return StfCommander.create(new StfCommanderContext(farmClient, adbRunner, cache), helpCommandCreator, str.split(" "));
+        return StfCommander.create(new StfCommanderContext(farmClient, adbRunner, cache), helpCommandCreator, ErrorHandler.EMPTY, str.split(" "));
     }
 }

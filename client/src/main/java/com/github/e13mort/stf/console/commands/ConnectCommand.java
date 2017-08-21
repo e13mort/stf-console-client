@@ -12,8 +12,10 @@ import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.console.AdbRunner;
 import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import com.github.e13mort.stf.model.device.Device;
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Notification;
+import io.reactivex.Single;
 import io.reactivex.internal.operators.flowable.FlowableError;
 
 import java.io.IOException;
@@ -41,23 +43,30 @@ class ConnectCommand implements CommandContainer.Command {
     }
 
     @Override
-    public void execute() {
+    public Completable execute() {
+        Flowable<Notification<String>> publisher;
         if (connectToMyDevices) {
-            connectToMyDevices();
-            return;
-        }
-        if (devicesIndexesFromCache.isEmpty()) {
-            connectWithParams(params);
+            publisher = connectToMyDevices();
+        } else if (devicesIndexesFromCache.isEmpty()) {
+            publisher = connectWithParams(params);
         } else {
-            Flowable.fromIterable(devicesIndexesFromCache)
-                    .map(integer -> integer--)
-                    .map(cache.getCachedFiles()::get)
-                    .map(Device::getSerial)
-                    .toList()
-                    .map(this::createStringsFilterDescription)
-                    .map(this::createDevicesParams)
-                    .subscribe(this::connectWithParams, this::handleError);
+            publisher = readParamsFromCache().flatMapPublisher(this::connectWithParams);
         }
+        return Completable.fromPublisher(publisher.switchIfEmpty(getError()));
+    }
+
+    private Flowable<Notification<String>> getError() {
+        return FlowableError.error(new EmptyDevicesException());
+    }
+
+    private Single<DevicesParams> readParamsFromCache() {
+        return Flowable.fromIterable(devicesIndexesFromCache)
+                .map(integer -> --integer)
+                .map(cache.getCachedFiles()::get)
+                .map(Device::getSerial)
+                .toList()
+                .map(this::createStringsFilterDescription)
+                .map(this::createDevicesParams);
     }
 
     private StringsFilterDescription createStringsFilterDescription(List<String> l) {
@@ -70,16 +79,14 @@ class ConnectCommand implements CommandContainer.Command {
         return params;
     }
 
-    private void connectToMyDevices() {
-        client.getMyDevices()
-                .map(device -> Notification.createOnNext((String)device.getRemoteConnectUrl()))
-                .switchIfEmpty(FlowableError.error(new EmptyDevicesException()))
-                .subscribe(this::handleDevices, this::handleError);
+    private Flowable<Notification<String>> connectToMyDevices() {
+        return client.getMyDevices()
+                .map(device -> Notification.createOnNext((String) device.getRemoteConnectUrl()))
+                .doOnNext(this::handleDevices);
     }
 
-    private void connectWithParams(DevicesParams params) {
-        client.connectToDevices(params)
-                .subscribe(this::handleDevices, this::handleError);
+    private Flowable<Notification<String>> connectWithParams(DevicesParams params) {
+        return client.connectToDevices(params).doOnNext(this::handleDevices);
     }
 
     private void handleDevices(Notification<String> deviceNotification) {
@@ -99,15 +106,7 @@ class ConnectCommand implements CommandContainer.Command {
     }
 
     private void handleNotConnectedDevice(Throwable error) {
-        System.out.println(String.format("Failed to connect: %s", error != null ? error.getMessage() : UNKNOWN_ERROR));
-    }
-
-    private void handleError(Throwable throwable) {
-        if (throwable instanceof EmptyDevicesException) {
-            System.out.println("There's no devices");
-        } else {
-            System.out.println("An error occurred during connection: " + throwable.getMessage());
-        }
+        System.err.println(String.format("Failed to connect: %s", error != null ? error.getMessage() : UNKNOWN_ERROR));
     }
 
 }

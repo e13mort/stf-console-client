@@ -4,6 +4,7 @@ import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.console.AdbRunner;
 import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import com.github.e13mort.stf.console.commands.devices.DevicesCommand;
+import io.reactivex.Completable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class CommandContainer {
     }
 
     public interface Command {
-        void execute();
+        Completable execute();
     }
 
 }
