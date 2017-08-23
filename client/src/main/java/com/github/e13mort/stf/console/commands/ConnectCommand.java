@@ -21,12 +21,14 @@ import io.reactivex.internal.operators.flowable.FlowableError;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Parameters(commandDescription = "Connect to devices")
 class ConnectCommand implements CommandContainer.Command {
-    private static final String UNKNOWN_ERROR = "Unknown error";
     private final FarmClient client;
     private final AdbRunner adbRunner;
+    private final Logger logger;
 
     @ParametersDelegate
     private ConsoleDeviceParamsImpl params = new ConsoleDeviceParamsImpl();
@@ -36,10 +38,11 @@ class ConnectCommand implements CommandContainer.Command {
     private List<Integer> devicesIndexesFromCache = new ArrayList<>();
     private DeviceListCache cache;
 
-    ConnectCommand(FarmClient client, AdbRunner adbRunner, DeviceListCache cache) {
+    ConnectCommand(FarmClient client, AdbRunner adbRunner, DeviceListCache cache, Logger logger) {
         this.client = client;
         this.adbRunner = adbRunner;
         this.cache = cache;
+        this.logger = logger;
     }
 
     @Override
@@ -101,12 +104,12 @@ class ConnectCommand implements CommandContainer.Command {
         try {
             adbRunner.connectToDevice(deviceIp);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "Failed to connect to a device", e);
         }
     }
 
     private void handleNotConnectedDevice(Throwable error) {
-        System.err.println(String.format("Failed to connect: %s", error != null ? error.getMessage() : UNKNOWN_ERROR));
+        logger.log(Level.WARNING, "Failed to lock a device", error);
     }
 
 }

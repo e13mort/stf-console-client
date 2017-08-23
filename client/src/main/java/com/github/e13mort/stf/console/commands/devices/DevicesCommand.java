@@ -10,9 +10,12 @@ import com.github.e13mort.stf.console.commands.ConsoleDeviceParamsImpl;
 import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import io.reactivex.Completable;
 
+import java.io.OutputStream;
+
 @Parameters(commandDescription = "Print list of available devices")
 public class DevicesCommand implements CommandContainer.Command {
     private final FarmClient client;
+    private final OutputStream output;
 
     @ParametersDelegate
     private DevicesParams params = new ConsoleDeviceParamsImpl();
@@ -21,9 +24,10 @@ public class DevicesCommand implements CommandContainer.Command {
     private boolean userColumns;
     private DeviceListCache cache;
 
-    public DevicesCommand(FarmClient client, DeviceListCache cache) {
+    public DevicesCommand(FarmClient client, DeviceListCache cache, OutputStream output) {
         this.client = client;
         this.cache = cache;
+        this.output = output;
     }
 
     @Override
@@ -36,6 +40,6 @@ public class DevicesCommand implements CommandContainer.Command {
         return Completable.fromPublisher(
                 loader.loadDevices()
                         .doOnNext(tablePrinter::addDevice)
-                        .doOnComplete(() -> tablePrinter.print(System.out)));
+                        .doOnComplete(() -> tablePrinter.print(output)));
     }
 }

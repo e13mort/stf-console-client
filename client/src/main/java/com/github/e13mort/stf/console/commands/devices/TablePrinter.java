@@ -6,6 +6,7 @@ import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
 import de.vandermeer.asciitable.v2.render.WidthLongestLine;
 import de.vandermeer.asciitable.v2.row.ContentRow;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,11 +29,11 @@ class TablePrinter {
         return table;
     }
 
-    public void print(PrintStream to) {
+    public void print(OutputStream outputStream) {
         V2_AsciiTableRenderer renderer = new V2_AsciiTableRenderer();
         renderer.setWidth(new WidthLongestLine());
         RenderedTable render = renderer.render(table);
-        to.println(render.toString());
+        new PrintStream(outputStream).println(render.toString());
     }
 
     private V2_AsciiTable prepareTable(Collection<String> columnNames) {

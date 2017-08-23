@@ -6,12 +6,17 @@ import io.reactivex.Completable;
 import io.reactivex.Notification;
 import io.reactivex.annotations.NonNull;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @Parameters(commandDescription = "Disconnect from all of currently connected devices")
 class DisconnectCommand implements CommandContainer.Command {
     private final FarmClient client;
+    private final Logger logger;
 
-    DisconnectCommand(FarmClient client) {
+    DisconnectCommand(FarmClient client, Logger logger) {
         this.client = client;
+        this.logger = logger;
     }
 
     @Override
@@ -20,6 +25,6 @@ class DisconnectCommand implements CommandContainer.Command {
     }
 
     private void handle(@NonNull Notification<String> stringNotification) {
-        System.out.println("Disconnected from " + stringNotification.getValue());
+        logger.log(Level.INFO, "Disconnected from: {0}", stringNotification.getValue());
     }
 }

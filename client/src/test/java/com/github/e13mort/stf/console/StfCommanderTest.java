@@ -23,7 +23,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -44,11 +46,14 @@ class StfCommanderTest {
     private DeviceListCache cache;
     @Mock
     private DeviceListCache.CacheTransaction cacheTransaction;
-
     @Mock
     private HelpCommandCreator helpCommandCreator;
     @Mock
     private CommandContainer.Command helpCommand;
+    @Mock
+    private OutputStream outputStream;
+    @Mock
+    private Logger logger;
     @Mock
     private Device myDevice;
 
@@ -253,6 +258,6 @@ class StfCommanderTest {
     }
 
     private StfCommander createCommander(String str) throws IOException {
-        return StfCommander.create(new StfCommanderContext(farmClient, adbRunner, cache), helpCommandCreator, ErrorHandler.EMPTY, str.split(" "));
+        return StfCommander.create(new StfCommanderContext(farmClient, adbRunner, cache, outputStream, logger), helpCommandCreator, ErrorHandler.EMPTY, str.split(" "));
     }
 }

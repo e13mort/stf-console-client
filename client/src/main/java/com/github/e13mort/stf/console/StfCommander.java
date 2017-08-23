@@ -6,25 +6,28 @@ import com.github.e13mort.stf.console.commands.HelpCommandCreator;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
 import io.reactivex.Completable;
 
-import java.io.IOException;
-
 public class StfCommander {
     private final CommandContainer commandContainer;
     private final CommandContainer.Command defaultCommand;
     private final ErrorHandler errorHandler;
     private String commandName;
 
-    private StfCommander(String commandName, CommandContainer commandContainer, CommandContainer.Command defaultCommand, ErrorHandler errorHandler) {
+    private StfCommander(
+            String commandName,
+            CommandContainer commandContainer,
+            CommandContainer.Command defaultCommand,
+            ErrorHandler errorHandler) {
         this.commandName = commandName;
         this.commandContainer = commandContainer;
         this.defaultCommand = defaultCommand;
         this.errorHandler = errorHandler;
     }
 
-    static StfCommander create(StfCommanderContext context, HelpCommandCreator commandCreator, ErrorHandler errorHandler, String... args) throws IOException {
-        CommandContainer commandContainer = new CommandContainer(context.getClient(), context.getAdbRunner(), context.getCache());
+    static StfCommander create(StfCommanderContext context, HelpCommandCreator commandCreator, ErrorHandler errorHandler, String... args) {
+        CommandContainer commandContainer = new CommandContainer(context);
         JCommander commander = createCommander(commandContainer, args);
-        return new StfCommander(commander.getParsedCommand(), commandContainer, commandCreator.createHelpCommand(commander), errorHandler);
+        final CommandContainer.Command helpCommand = commandCreator.createHelpCommand(commander);
+        return new StfCommander(commander.getParsedCommand(), commandContainer, helpCommand, errorHandler);
     }
 
     private static JCommander createCommander(CommandContainer commandContainer, String[] args) {
