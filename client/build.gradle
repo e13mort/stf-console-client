@@ -19,7 +19,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC3'
         classpath 'co.riiid:gradle-github-plugin:0.4.2'
         classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     }
