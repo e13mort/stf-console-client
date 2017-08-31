@@ -15,8 +15,6 @@ import com.github.e13mort.stf.model.device.Device;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Notification;
-import io.reactivex.Single;
-import io.reactivex.internal.operators.flowable.FlowableError;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,23 +51,35 @@ class ConnectCommand implements CommandContainer.Command {
         } else if (devicesIndexesFromCache.isEmpty()) {
             publisher = connectWithParams(params);
         } else {
-            publisher = readParamsFromCache().flatMapPublisher(this::connectWithParams);
+            publisher = readParamsFromCache(cache.getCachedFiles()).flatMap(this::connectWithParams);
         }
-        return Completable.fromPublisher(publisher.switchIfEmpty(getError()));
+        return Completable.fromPublisher(publisher);
     }
 
-    private Flowable<Notification<String>> getError() {
-        return FlowableError.error(new EmptyDevicesException());
+    void setDevicesIndexesFromCache(List<Integer> devicesIndexesFromCache) {
+        this.devicesIndexesFromCache = devicesIndexesFromCache;
     }
 
-    private Single<DevicesParams> readParamsFromCache() {
+    private Flowable<DevicesParams> readParamsFromCache(List<Device> cachedFiles) {
         return Flowable.fromIterable(devicesIndexesFromCache)
+                .doOnNext(integer -> validate(cachedFiles, integer))
                 .map(integer -> --integer)
-                .map(cache.getCachedFiles()::get)
+                .map(cachedFiles::get)
                 .map(Device::getSerial)
                 .toList()
                 .map(this::createStringsFilterDescription)
-                .map(this::createDevicesParams);
+                .map(this::createDevicesParams)
+                .toFlowable();
+    }
+
+    private void validate(List<Device> cachedFiles, int index) throws InvalidCacheIndexException {
+        if (!isIndexValid(cachedFiles, index)) {
+            throw new InvalidCacheIndexException(index);
+        }
+    }
+
+    private boolean isIndexValid(List<Device> cachedFiles, Integer integer) {
+        return integer > 0 && integer <= cachedFiles.size();
     }
 
     private StringsFilterDescription createStringsFilterDescription(List<String> l) {
@@ -85,11 +95,18 @@ class ConnectCommand implements CommandContainer.Command {
     private Flowable<Notification<String>> connectToMyDevices() {
         return client.getMyDevices()
                 .map(device -> Notification.createOnNext((String) device.getRemoteConnectUrl()))
+                .switchIfEmpty(getEmptyError())
                 .doOnNext(this::handleDevices);
     }
 
+    private Flowable<Notification<String>> getEmptyError() {
+        return Flowable.error(new EmptyDevicesException());
+    }
+
     private Flowable<Notification<String>> connectWithParams(DevicesParams params) {
-        return client.connectToDevices(params).doOnNext(this::handleDevices);
+        return client.connectToDevices(params)
+                .doOnNext(this::handleDevices)
+                .switchIfEmpty(getEmptyError());
     }
 
     private void handleDevices(Notification<String> deviceNotification) {
