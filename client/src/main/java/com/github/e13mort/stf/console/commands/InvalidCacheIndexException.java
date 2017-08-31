@@ -4,6 +4,7 @@ public class InvalidCacheIndexException extends Exception {
     private final int index;
 
     public InvalidCacheIndexException(int index) {
+        super("Invalid cache index: " + index);
         this.index = index;
     }
 
