@@ -4,8 +4,11 @@ import com.github.e13mort.stf.model.device.Device;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-final class FallbackDeviceReader implements DeviceMapper {
+final class PredefinedDeviceReader implements DeviceMapper {
+
+    private static final List<String> PREDEFINED_COLUMN_NAMES = Arrays.asList("Name", "Abi", "Serial", "Sdk", "Provider");
 
     @Override
     public Collection<String> apply(Device device) throws Exception {
@@ -20,6 +23,6 @@ final class FallbackDeviceReader implements DeviceMapper {
 
     @Override
     public Collection<String> getColumnNames() {
-        return Arrays.asList("Name", "Abi", "Serial", "Sdk", "Provider");
+        return PREDEFINED_COLUMN_NAMES;
     }
 }

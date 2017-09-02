@@ -33,7 +33,7 @@ public class DevicesCommand implements CommandContainer.Command {
     @Override
     public Completable execute() {
         DocumentsLoader loader = new DocumentsLoader(client, params);
-        loader.setFieldsReader(userColumns ? new ReflectionDeviceReader() : new FallbackDeviceReader());
+        loader.setFieldsReader(userColumns ? new ReflectionDeviceReader() : new PredefinedDeviceReader());
         loader.setDeviceListCache(cache);
 
         TablePrinter tablePrinter = new TablePrinter(loader.getColumnNames());
