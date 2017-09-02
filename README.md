@@ -6,6 +6,8 @@ A console client for the [Smartphone Test Farm](https://github.com/openstf/stf) 
 
 [All versions](https://github.com/e13mort/stf-console-client/releases/)
 
+![stf devices](stf_usage.png)
+
 ## Configuration
 
 * Download and extract an artifact from "releases" page into some target directory
@@ -32,16 +34,23 @@ stf [command] [command options]
           --all
             Show all devices. By default only available devices are returned.
             Default: false
+          --my-columns
+            <BETA> Use columns from web panel
+            Default: false
           -abi
             Filter by device abi architecture
           -api
             Filter by device api level
+            Default: 0
           -count
             Filter devices by count
+            Default: 0
           -maxApi
             Filter by device max api level
+            Default: 0
           -minApi
             Filter by device min api level
+            Default: 0
           -name
             Filter devices by its name
           -provider
@@ -62,12 +71,20 @@ stf [command] [command options]
             Filter by device abi architecture
           -api
             Filter by device api level
+            Default: 0
           -count
             Filter devices by count
+            Default: 0
+          -l
+            Connect to devices by its indexes from the results of previous
+            "devices" command. E.g. "-l 1 2 5"
+            Default: []
           -maxApi
             Filter by device max api level
+            Default: 0
           -minApi
             Filter by device min api level
+            Default: 0
           -name
             Filter devices by its name
           -provider
