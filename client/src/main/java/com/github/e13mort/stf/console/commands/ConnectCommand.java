@@ -32,7 +32,8 @@ class ConnectCommand implements CommandContainer.Command {
     private ConsoleDeviceParamsImpl params = new ConsoleDeviceParamsImpl();
     @Parameter(names = "--my", description = "Connect to currently taken devices")
     private Boolean connectToMyDevices = false;
-    @Parameter(names = "-l", variableArity = true, listConverter = IntegerConverter.class)
+    @Parameter(names = "-l", variableArity = true, listConverter = IntegerConverter.class,
+            description = "Connect to devices by its indexes from the results of previous \"devices\" command. E.g. \"-l 1 2 5\"")
     private List<Integer> devicesIndexesFromCache = new ArrayList<>();
     private DeviceListCache cache;
 
