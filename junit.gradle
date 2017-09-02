@@ -1,4 +1,4 @@
- apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'org.junit.platform.gradle.plugin'
 junitPlatform {
     filters {
         engines {
@@ -11,7 +11,7 @@ junitPlatform {
     enableStandardTestTask true
 }
 dependencies {
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
-    testCompile "org.junit.jupiter:junit-jupiter-params:5.0.0-M4"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-RC3'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.0.0-RC3'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-RC3'
 }

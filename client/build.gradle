@@ -10,7 +10,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 def ARTIFACT_ID = 'stf-console-client'
-def ARTIFACT_VERSION = '0.3.0'
+def ARTIFACT_VERSION = '0.3.1-preview'
 def SCRIPT_NAME = 'stf'
 
 buildscript {
@@ -19,7 +19,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC3'
         classpath 'co.riiid:gradle-github-plugin:0.4.2'
         classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     }
@@ -38,6 +38,7 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile "com.beust:jcommander:1.71"
+    compile 'de.vandermeer:asciitable-j7:1.0.1'
 
     testCompile "org.mockito:mockito-core:2.+"
 }

@@ -1,6 +1,7 @@
 package com.github.e13mort.stf.console.commands;
 
 import com.beust.jcommander.JCommander;
+import io.reactivex.Completable;
 
 public class HelpCommand implements CommandContainer.Command {
     private final JCommander jCommander;
@@ -10,7 +11,7 @@ public class HelpCommand implements CommandContainer.Command {
     }
 
     @Override
-    public void execute() {
-        jCommander.usage();
+    public Completable execute() {
+        return Completable.fromAction(jCommander::usage);
     }
 }

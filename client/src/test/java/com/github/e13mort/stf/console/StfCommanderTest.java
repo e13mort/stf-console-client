@@ -1,60 +1,23 @@
 package com.github.e13mort.stf.console;
 
-import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
 import com.github.e13mort.stf.client.DevicesParams;
-import com.github.e13mort.stf.client.FarmClient;
-import com.github.e13mort.stf.console.commands.CommandContainer;
-import com.github.e13mort.stf.console.commands.HelpCommandCreator;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
-import com.github.e13mort.stf.model.device.Device;
-import io.reactivex.Flowable;
-import io.reactivex.Notification;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-class StfCommanderTest {
-
-    private static final String TEST_DEVICE_REMOTE = "127.0.0.1:15500";
-    @Mock
-    private FarmClient farmClient;
-    @Mock
-    private AdbRunner adbRunner;
-    @Mock
-    private HelpCommandCreator helpCommandCreator;
-    @Mock
-    private CommandContainer.Command helpCommand;
-    @Mock
-    private Device myDevice;
-
-    @BeforeEach
-    void setUp() throws IOException {
-        MockitoAnnotations.initMocks(this);
-        when(farmClient.getDevices(any(DevicesParams.class))).thenReturn(Flowable.<Device>empty());
-        when(farmClient.connectToDevices(any(DevicesParams.class))).thenReturn(Flowable.<Notification<String>>empty());
-        when(farmClient.disconnectFromAllDevices()).thenReturn(Flowable.<Notification<String>>empty());
-        when(helpCommandCreator.createHelpCommand(any(JCommander.class))).thenReturn(helpCommand);
-        when(farmClient.getMyDevices()).thenReturn(Flowable.fromArray(myDevice));
-        when(myDevice.getRemoteConnectUrl()).thenReturn(TEST_DEVICE_REMOTE);
-    }
+class StfCommanderTest extends BaseStfCommanderTest {
 
     @DisplayName("Command without params should be called with non null DeviceParams object")
     @ParameterizedTest(name = "Command is {0}")
@@ -219,44 +182,22 @@ class StfCommanderTest {
         verify(adbRunner).connectToDevice(eq(TEST_DEVICE_REMOTE));
     }
 
+    @DisplayName("connect command is parsed with valid -l param")
+    @Test
+    void testConnectCommandWithValidCacheParam() throws IOException {
+        createCommander("connect -l 1 2 3");
+    }
+
+    @DisplayName("connect command will throw the ParameterException if -l param is invalid")
+    @Test
+    void testConnectCommandWithInvalidValidCacheParam() throws IOException {
+         assertThrows(ParameterException.class, () -> createCommander("connect -l str"));
+    }
+
     @Test
     void testDisconnectCommand() throws IOException, UnknownCommandException {
         createCommander("disconnect").execute();
         verify(farmClient).disconnectFromAllDevices();
     }
 
-    private DevicesParams runDeviceParamsTest(DeviceParamsProducingCommand source, String params) throws IOException, UnknownCommandException {
-        ArgumentCaptor<DevicesParams> objectArgumentCaptor = ArgumentCaptor.forClass(DevicesParams.class);
-        createCommander(source.name().toLowerCase() + " " + params).execute();
-        if (source == DeviceParamsProducingCommand.DEVICES) {
-            verify(farmClient).getDevices(objectArgumentCaptor.capture());
-        } else {
-            verify(farmClient).connectToDevices(objectArgumentCaptor.capture());
-        }
-        return objectArgumentCaptor.getValue();
-    }
-
-    enum DeviceParamsProducingCommand {DEVICES, CONNECT}
-
-    private Executable test(final DeviceParamsProducingCommand source, final String str) {
-        return new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                runDeviceParamsTest(source, str);
-            }
-        };
-    }
-
-    private Executable test(@SuppressWarnings("SameParameterValue") final String str) {
-        return new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                createCommander(str).execute();
-            }
-        };
-    }
-
-    private StfCommander createCommander(String str) throws IOException {
-        return StfCommander.create(new StfCommanderContext(farmClient, adbRunner), helpCommandCreator, str.split(" "));
-    }
 }

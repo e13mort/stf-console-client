@@ -1,17 +1,21 @@
 package com.github.e13mort.stf.console;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AdbRunner {
     private static final String ADB_DIRECTORY = "platform-tools";
     private final String androidSdkPath;
     private static final String TAG_ADB = "ADB";
+    private final Logger logger;
 
-    AdbRunner(String androidSdkPath) {
+    AdbRunner(String androidSdkPath, Logger logger) {
         if (androidSdkPath == null) {
             androidSdkPath = "";
         }
         this.androidSdkPath = androidSdkPath;
+        this.logger = logger;
     }
 
     public void connectToDevice(String connectionUrl) throws IOException {
@@ -36,18 +40,18 @@ public class AdbRunner {
                 log(TAG_ADB, line);
             }
         } catch (IOException e) {
-            log("Line reading error", e);
+            log(e);
         } finally {
             reader.close();
             stream.close();
         }
     }
 
-    private void log(String message, Exception e) {
-        System.out.println("message " + e.getMessage());
+    private void log(Exception e) {
+        logger.log(Level.INFO, "message {0}", e.getMessage());
     }
 
     private void log(String tag, String message) {
-        System.out.println(tag + ": " + message);
+        logger.info(tag + ": " + message);
     }
 }

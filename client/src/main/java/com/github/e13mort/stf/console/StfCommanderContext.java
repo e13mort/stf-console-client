@@ -2,21 +2,31 @@ package com.github.e13mort.stf.console;
 
 import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.client.FarmInfo;
+import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
+import io.reactivex.Single;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Properties;
+import java.util.logging.Logger;
 
-class StfCommanderContext {
+public class StfCommanderContext {
     private static final String DEFAULT_PROPERTY_FILE_NAME = "farm.properties";
 
     private final FarmClient client;
     private final AdbRunner adbRunner;
+    private DeviceListCache cache;
+    private OutputStream output;
+    private Logger logger;
 
-    public StfCommanderContext(FarmClient client, AdbRunner adbRunner) {
+    StfCommanderContext(FarmClient client, AdbRunner adbRunner, DeviceListCache cache, OutputStream output, Logger logger) {
         this.client = client;
         this.adbRunner = adbRunner;
+        this.cache = cache;
+        this.output = output;
+        this.logger = logger;
     }
 
     public FarmClient getClient() {
@@ -27,11 +37,29 @@ class StfCommanderContext {
         return adbRunner;
     }
 
-    public static StfCommanderContext create() throws IOException {
+    public DeviceListCache getCache() {
+        return cache;
+    }
+
+    public OutputStream getOutput() {
+        return output;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    static Single<StfCommanderContext> create(Logger logger) {
+        return Single.create(e -> e.onSuccess(createInternal(logger)));
+    }
+
+    private static StfCommanderContext createInternal(Logger logger) throws IOException {
         FarmInfo farmInfo = createFarmInfo();
         FarmClient client = FarmClient.create(farmInfo);
-        AdbRunner adbRunner = new AdbRunner(farmInfo.getSdkPath());
-        return new StfCommanderContext(client, adbRunner);
+        AdbRunner adbRunner = new AdbRunner(farmInfo.getSdkPath(), logger);
+        DeviceListCache cache = DeviceListCache.getCache();
+        final OutputStream output = System.out;
+        return new StfCommanderContext(client, adbRunner, cache, output, logger);
     }
 
     private static FarmInfo createFarmInfo() throws IOException {
@@ -67,12 +95,7 @@ class StfCommanderContext {
     }
 
     private static int getTimeout(Properties properties) {
-        try {
-            String timeoutProperty = properties.getProperty("stf.timeout");
-            return Integer.parseInt(timeoutProperty);
-        } catch (NumberFormatException e) {
-            System.err.println("Failed to get timeout from the properties. A default value is going to be used.");
-        }
-        return -1;
+        String timeoutProperty = properties.getProperty("stf.timeout");
+        return Integer.parseInt(timeoutProperty);
     }
 }

@@ -4,24 +4,30 @@ import com.beust.jcommander.JCommander;
 import com.github.e13mort.stf.console.commands.CommandContainer;
 import com.github.e13mort.stf.console.commands.HelpCommandCreator;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
-
-import java.io.IOException;
+import io.reactivex.Completable;
 
 public class StfCommander {
     private final CommandContainer commandContainer;
     private final CommandContainer.Command defaultCommand;
+    private final ErrorHandler errorHandler;
     private String commandName;
 
-    private StfCommander(String commandName, CommandContainer commandContainer, CommandContainer.Command defaultCommand) {
+    private StfCommander(
+            String commandName,
+            CommandContainer commandContainer,
+            CommandContainer.Command defaultCommand,
+            ErrorHandler errorHandler) {
         this.commandName = commandName;
         this.commandContainer = commandContainer;
         this.defaultCommand = defaultCommand;
+        this.errorHandler = errorHandler;
     }
 
-    static StfCommander create(StfCommanderContext context, HelpCommandCreator commandCreator, String... args) throws IOException {
-        CommandContainer commandContainer = new CommandContainer(context.getClient(), context.getAdbRunner());
+    static StfCommander create(StfCommanderContext context, HelpCommandCreator commandCreator, ErrorHandler errorHandler, String... args) {
+        CommandContainer commandContainer = new CommandContainer(context);
         JCommander commander = createCommander(commandContainer, args);
-        return new StfCommander(commander.getParsedCommand(), commandContainer, commandCreator.createHelpCommand(commander));
+        final CommandContainer.Command helpCommand = commandCreator.createHelpCommand(commander);
+        return new StfCommander(commander.getParsedCommand(), commandContainer, helpCommand, errorHandler);
     }
 
     private static JCommander createCommander(CommandContainer commandContainer, String[] args) {
@@ -37,12 +43,17 @@ public class StfCommander {
         return commander;
     }
 
-    void execute() throws UnknownCommandException {
+    void execute() {
         CommandContainer.Command command = chooseCommand();
-        if (command == null) {
-            throw new UnknownCommandException(commandName);
+        if (command != null) {
+            run(command.execute());
+        } else {
+            errorHandler.handle(new UnknownCommandException(commandName));
         }
-        command.execute();
+    }
+
+    private void run(Completable completable) {
+        completable.subscribe(() -> {}, errorHandler::handle);
     }
 
     private CommandContainer.Command chooseCommand() {
