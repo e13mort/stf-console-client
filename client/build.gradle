@@ -73,7 +73,7 @@ github {
     owner = 'e13mort'
     repo = ARTIFACT_ID
     token = rootProject.ext.githubKey
-    tagName = "v${ARTIFACT_VERSION}"
+    tagName = "${ARTIFACT_VERSION}"
     assets = [
             "client/build/distributions/stf-console-client-${ARTIFACT_VERSION}.tar",
             "client/build/distributions/stf-console-client-${ARTIFACT_VERSION}.zip"
