@@ -1,4 +1,4 @@
-package com.github.e13mort.stf.console.commands;
+package com.github.e13mort.stf.console.commands.connect;
 
 import com.github.e13mort.stf.client.DevicesParams;
 import com.github.e13mort.stf.console.BaseStfCommanderTest;
