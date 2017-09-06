@@ -1,0 +1,10 @@
+{
+  "count": 10,
+  "api": 10,
+  "names": "name1,name2",
+  "minApi": 10,
+  "providers": "provider1,provider2",
+  "serials": "serial1,serial2",
+  "maxApi": 10,
+  "abi": "arm"
+}

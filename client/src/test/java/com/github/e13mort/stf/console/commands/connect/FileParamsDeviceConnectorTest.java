@@ -1,6 +1,7 @@
 package com.github.e13mort.stf.console.commands.connect;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.github.e13mort.stf.client.DevicesParams;
 import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.console.AdbRunner;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +20,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class FileParamsDeviceConnectorTest {
     @Mock
@@ -58,9 +62,19 @@ class FileParamsDeviceConnectorTest {
         Assertions.assertThrows(exceptionClass, connector::readParamsFromFile);
     }
 
+    @DisplayName("full valid connection params file should be parsed")
     @Test
-    void readParamsFromFile_validFullFile_exactMatching() {
-        //implement
+    void readParamsFromFile_validFullFile_exactMatching() throws IOException {
+        final FileParamsDeviceConnector connector = createConnector("valid_full_params.json");
+        final DevicesParams params = connector.readParamsFromFile();
+        assertEquals(10, params.getCount());
+        assertEquals(10, params.getApiVersion());
+        assertEquals(10, params.getMinApiVersion());
+        assertEquals(10, params.getMaxApiVersion());
+        assertEquals("arm", params.getAbi());
+        assertNotNull(params.getSerialFilterDescription());
+        assertNotNull(params.getNameFilterDescription());
+        assertNotNull(params.getProviderFilterDescription());
     }
 
     private static Stream<Arguments> invalidFiles() {
