@@ -94,3 +94,28 @@ stf [command] [command options]
             Filter devices by provider
           -serial
             Filter devices by serial number
+
+
+#### Store connection parameters in a file
+Connection parameters might be stored as a separate file:
+
+    confing.json:
+    {
+      "count": 2,
+      "api": 23,
+      "names": "nexus5,nexus6",
+      "minApi": 21,
+      "providers": "~support,autotests",
+      "serials": "3a4674bce45644",
+      "maxApi": 26,
+      "abi": "arm"
+    }
+
+    usage: stf connect -f config.json
+
+All fields are optional. For the "providers", "serials" and "names" fields the `~` sign might be used to inverse filter.
+E.g config with parameter
+
+    "providers": "~support,autotests"
+
+means 'use all available devices except the ones which belongs to the "support" and "autotests" groups'.
