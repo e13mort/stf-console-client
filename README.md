@@ -1,6 +1,7 @@
 # STF console client
 A console client for the [Smartphone Test Farm](https://github.com/openstf/stf) service
 
+[![Build Status](https://travis-ci.org/e13mort/stf-console-client.svg?branch=master)](https://travis-ci.org/e13mort/stf-console-client)
 ## Download
 [Latest version](https://github.com/e13mort/stf-console-client/releases/latest)
 
@@ -75,6 +76,8 @@ stf [command] [command options]
           -count
             Filter devices by count
             Default: 0
+          -f
+            Read connection params from a file
           -l
             Connect to devices by its indexes from the results of previous
             "devices" command. E.g. "-l 1 2 5"
@@ -91,6 +94,3 @@ stf [command] [command options]
             Filter devices by provider
           -serial
             Filter devices by serial number
-
-
-[![Build Status](https://travis-ci.org/e13mort/stf-console-client.svg?branch=master)](https://travis-ci.org/e13mort/stf-console-client)
