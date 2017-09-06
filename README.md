@@ -1,6 +1,7 @@
 # STF console client
 A console client for the [Smartphone Test Farm](https://github.com/openstf/stf) service
 
+[![Build Status](https://travis-ci.org/e13mort/stf-console-client.svg?branch=master)](https://travis-ci.org/e13mort/stf-console-client)
 ## Download
 [Latest version](https://github.com/e13mort/stf-console-client/releases/latest)
 
@@ -75,6 +76,8 @@ stf [command] [command options]
           -count
             Filter devices by count
             Default: 0
+          -f
+            Read connection params from a file
           -l
             Connect to devices by its indexes from the results of previous
             "devices" command. E.g. "-l 1 2 5"
@@ -93,4 +96,26 @@ stf [command] [command options]
             Filter devices by serial number
 
 
-[![Build Status](https://travis-ci.org/e13mort/stf-console-client.svg?branch=master)](https://travis-ci.org/e13mort/stf-console-client)
+#### Store connection parameters in a file
+Connection parameters might be stored as a separate file:
+
+    confing.json:
+    {
+      "count": 2,
+      "api": 23,
+      "names": "nexus5,nexus6",
+      "minApi": 21,
+      "providers": "~support,autotests",
+      "serials": "3a4674bce45644",
+      "maxApi": 26,
+      "abi": "arm"
+    }
+
+    usage: stf connect -f config.json
+
+All fields are optional. For the "providers", "serials" and "names" fields the `~` sign might be used to inverse filter.
+E.g config with parameter
+
+    "providers": "~support,autotests"
+
+means 'use all available devices except the ones which belongs to the "support" and "autotests" groups'.

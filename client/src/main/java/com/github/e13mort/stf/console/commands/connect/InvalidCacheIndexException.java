@@ -1,4 +1,4 @@
-package com.github.e13mort.stf.console.commands;
+package com.github.e13mort.stf.console.commands.connect;
 
 public class InvalidCacheIndexException extends Exception {
     private final int index;

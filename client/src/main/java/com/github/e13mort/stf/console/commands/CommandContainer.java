@@ -1,6 +1,7 @@
 package com.github.e13mort.stf.console.commands;
 
 import com.github.e13mort.stf.console.StfCommanderContext;
+import com.github.e13mort.stf.console.commands.connect.ConnectCommand;
 import com.github.e13mort.stf.console.commands.devices.DevicesCommand;
 import io.reactivex.Completable;
 
