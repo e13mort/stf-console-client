@@ -2,9 +2,9 @@ package com.github.e13mort.stf.console.commands.connect;
 
 import com.github.e13mort.stf.adapter.filters.InclusionType;
 import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
-import com.github.e13mort.stf.client.DevicesParams;
-import com.github.e13mort.stf.client.DevicesParamsImpl;
 import com.github.e13mort.stf.client.FarmClient;
+import com.github.e13mort.stf.client.parameters.DevicesParams;
+import com.github.e13mort.stf.client.parameters.DevicesParamsImpl;
 import com.github.e13mort.stf.console.AdbRunner;
 import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import com.github.e13mort.stf.model.device.Device;

@@ -1,8 +1,8 @@
 package com.github.e13mort.stf.console;
 
 import com.beust.jcommander.JCommander;
-import com.github.e13mort.stf.client.DevicesParams;
 import com.github.e13mort.stf.client.FarmClient;
+import com.github.e13mort.stf.client.parameters.DevicesParams;
 import com.github.e13mort.stf.console.commands.CommandContainer;
 import com.github.e13mort.stf.console.commands.HelpCommandCreator;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;

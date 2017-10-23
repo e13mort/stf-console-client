@@ -1,7 +1,7 @@
 package com.github.e13mort.stf.console.commands.devices;
 
-import com.github.e13mort.stf.client.DevicesParams;
 import com.github.e13mort.stf.client.FarmClient;
+import com.github.e13mort.stf.client.parameters.DevicesParams;
 import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import io.reactivex.Flowable;
 

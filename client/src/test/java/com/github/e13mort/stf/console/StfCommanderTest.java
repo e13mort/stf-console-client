@@ -2,7 +2,7 @@ package com.github.e13mort.stf.console;
 
 import com.beust.jcommander.ParameterException;
 import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
-import com.github.e13mort.stf.client.DevicesParams;
+import com.github.e13mort.stf.client.parameters.DevicesParams;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

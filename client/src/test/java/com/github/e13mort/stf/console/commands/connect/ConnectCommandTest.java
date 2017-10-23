@@ -1,6 +1,6 @@
 package com.github.e13mort.stf.console.commands.connect;
 
-import com.github.e13mort.stf.client.DevicesParams;
+import com.github.e13mort.stf.client.parameters.DevicesParams;
 import com.github.e13mort.stf.console.BaseStfCommanderTest;
 import com.github.e13mort.stf.model.device.Device;
 import io.reactivex.Flowable;
