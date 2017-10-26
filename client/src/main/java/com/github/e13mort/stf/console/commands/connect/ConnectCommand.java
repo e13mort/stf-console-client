@@ -5,6 +5,7 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.beust.jcommander.converters.FileConverter;
 import com.beust.jcommander.converters.IntegerConverter;
+import com.beust.jcommander.converters.URLConverter;
 import com.github.e13mort.stf.client.FarmClient;
 import com.github.e13mort.stf.console.AdbRunner;
 import com.github.e13mort.stf.console.commands.CommandContainer;
@@ -13,6 +14,7 @@ import com.github.e13mort.stf.console.commands.cache.DeviceListCache;
 import io.reactivex.Completable;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -32,6 +34,8 @@ public class ConnectCommand implements CommandContainer.Command {
     private List<Integer> devicesIndexesFromCache = new ArrayList<>();
     @Parameter(names = "-f", description = "Read connection params from a file", converter = FileConverter.class)
     private File storedConnectionParamsFile;
+    @Parameter(names = "-u", description = "Read connection params from an url", converter = URLConverter.class)
+    private URL storedConnectionParamsUrl;
     private DeviceListCache cache;
 
     public ConnectCommand(FarmClient client, AdbRunner adbRunner, DeviceListCache cache, Logger logger) {
@@ -58,7 +62,9 @@ public class ConnectCommand implements CommandContainer.Command {
         } else if (!devicesIndexesFromCache.isEmpty()) {
             connector = new CacheDevicesConnector(client, adbRunner, logger, devicesIndexesFromCache, cache);
         } else if (storedConnectionParamsFile != null) {
-            connector = new FileParamsDeviceConnector(client, adbRunner, logger, storedConnectionParamsFile);
+            connector = FileParamsDeviceConnector.of(client, adbRunner, logger, storedConnectionParamsFile);
+        } else if (storedConnectionParamsUrl != null) {
+            connector = FileParamsDeviceConnector.of(client, adbRunner, logger, storedConnectionParamsUrl);
         } else {
             connector = new ParamsConnector(client, adbRunner, logger, params);
         }

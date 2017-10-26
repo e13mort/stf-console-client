@@ -8,6 +8,7 @@ import com.github.e13mort.stf.console.AdbRunner;
 import org.reactivestreams.Publisher;
 
 import java.io.File;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import io.reactivex.Flowable;
@@ -15,23 +16,31 @@ import io.reactivex.Notification;
 
 class FileParamsDeviceConnector extends DeviceConnector {
 
-    private final File paramsFile;
+    private final ParametersReader reader;
 
-    FileParamsDeviceConnector(FarmClient client, AdbRunner adbRunner, Logger logger, File paramsFile) {
+    static DeviceConnector of(FarmClient client, AdbRunner adbRunner, Logger logger, File paramsFile) {
+        return new FileParamsDeviceConnector(client, adbRunner, logger, () -> new JsonDeviceParametersReader().read(paramsFile));
+    }
+
+    static DeviceConnector of(FarmClient client, AdbRunner adbRunner, Logger logger, URL paramsUrl) {
+        return new FileParamsDeviceConnector(client, adbRunner, logger, () -> new JsonDeviceParametersReader().read(paramsUrl));
+    }
+
+    private FileParamsDeviceConnector(FarmClient client, AdbRunner adbRunner, Logger logger, ParametersReader reader) {
         super(client, adbRunner, logger);
-        this.paramsFile = paramsFile;
+        this.reader = reader;
     }
 
     @Override
     protected Publisher<Notification<String>> createConnectionPublisher() {
         try {
-            return connectWithParams(readParamsFromFile());
+            return connectWithParams(reader.read());
         } catch (JsonDeviceParametersReader.JsonParamsReaderException e) {
             return Flowable.error(e);
         }
     }
 
-    DevicesParams readParamsFromFile() throws JsonDeviceParametersReader.JsonParamsReaderException {
-        return new JsonDeviceParametersReader().read(paramsFile);
+    private interface ParametersReader {
+        DevicesParams read() throws JsonDeviceParametersReader.JsonParamsReaderException;
     }
 }

@@ -3,8 +3,7 @@ package com.github.e13mort.stf.console.commands.connect;
 import com.github.e13mort.stf.client.parameters.DevicesParams;
 import com.github.e13mort.stf.console.BaseStfCommanderTest;
 import com.github.e13mort.stf.model.device.Device;
-import io.reactivex.Flowable;
-import io.reactivex.Notification;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,9 +18,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import io.reactivex.Flowable;
+import io.reactivex.Notification;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@SuppressWarnings("unused")
 @DisplayName("Detailed \"connect\" command cases")
 class ConnectCommandTest extends BaseStfCommanderTest {
 
