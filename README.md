@@ -94,6 +94,8 @@ stf [command] [command options]
             Filter devices by provider
           -serial
             Filter devices by serial number
+          -u
+            Read connection params from an url
 
 
 #### Store connection parameters in a file
@@ -112,6 +114,7 @@ Connection parameters might be stored as a separate file:
     }
 
     usage: stf connect -f config.json
+           stf connect -u http://sample.com/params.json
 
 All fields are optional. For the "providers", "serials" and "names" fields the `~` sign might be used to inverse filter.
 E.g config with parameter

@@ -2,8 +2,9 @@ package com.github.e13mort.stf.console;
 
 import com.beust.jcommander.ParameterException;
 import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
-import com.github.e13mort.stf.client.DevicesParams;
+import com.github.e13mort.stf.client.parameters.DevicesParams;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +14,13 @@ import java.io.IOException;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -192,6 +199,36 @@ class StfCommanderTest extends BaseStfCommanderTest {
     @Test
     void testConnectCommandWithInvalidValidCacheParam() throws IOException {
          assertThrows(ParameterException.class, () -> createCommander("connect -l str"));
+    }
+
+    @DisplayName("Connect command with valid -u parameter will be parsed successfully")
+    @Test
+    void testValidUrlParamsIsParsed() throws IOException, UnknownCommandException {
+        createCommander("connect -u http://google.com");
+    }
+
+    @DisplayName("Connect command with valid -f parameter will be parsed successfully")
+    @Test
+    void testValidFileParamsIsParsed() throws IOException, UnknownCommandException {
+        createCommander("connect -f some/file.json");
+    }
+
+    @DisplayName("Connect command with invalid -u parameter will throw an error")
+    @Test
+    void testInvalidUrlParamsIsFailedToParse() throws IOException, UnknownCommandException {
+        assertThrows(ParameterException.class, () -> createCommander(" connect -u not_a_url"));
+    }
+
+    @DisplayName("Connect command with empty -u parameter will throw an error")
+    @Test
+    void testEmptyUrlParamsIsFailedToParse() throws IOException, UnknownCommandException {
+        assertThrows(ParameterException.class, () -> createCommander(" connect -u"));
+    }
+
+    @DisplayName("Connect command with empty -f parameter will throw an error")
+    @Test
+    void testEmptyFileParamsIsFailedToParse() throws IOException, UnknownCommandException {
+        assertThrows(ParameterException.class, () -> createCommander(" connect -u"));
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.github.e13mort.stf.console.commands;
 
 import com.beust.jcommander.Parameter;
 import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
-import com.github.e13mort.stf.client.DevicesParams;
+import com.github.e13mort.stf.client.parameters.DevicesParams;
 
 public class ConsoleDeviceParamsImpl implements DevicesParams {
     @Parameter(names = "--all", description = "Show all devices. By default only available devices are returned.")
