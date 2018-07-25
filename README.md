@@ -27,7 +27,12 @@ stf [command] [command options]
   Commands:
 
     disconnect      Disconnect from all of currently connected devices
-      Usage: disconnect
+      Usage: disconnect [options]
+              Options:
+                -s
+                  Disconnect from the specified devices
+                  Default: []
+
 
     devices      Print list of available devices
       Usage: devices [options]

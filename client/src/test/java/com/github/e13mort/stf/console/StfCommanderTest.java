@@ -5,12 +5,14 @@ import com.github.e13mort.stf.adapter.filters.StringsFilterDescription;
 import com.github.e13mort.stf.client.parameters.DevicesParams;
 import com.github.e13mort.stf.console.commands.UnknownCommandException;
 
+import io.reactivex.Flowable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -21,8 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class StfCommanderTest extends BaseStfCommanderTest {
 
@@ -231,10 +235,18 @@ class StfCommanderTest extends BaseStfCommanderTest {
         assertThrows(ParameterException.class, () -> createCommander(" connect -u"));
     }
 
+    @DisplayName("Disconnect command call disconnectFromAllDevices method")
     @Test
     void testDisconnectCommand() throws IOException, UnknownCommandException {
         createCommander("disconnect").execute();
         verify(farmClient).disconnectFromAllDevices();
     }
 
+    @DisplayName("Disconnect command with -s will call disconnectFromDevices method with the same parameters")
+    @Test
+    void testDisconnectFromSpecifiedDevices() throws IOException {
+        when(farmClient.disconnectFromDevices(any())).thenReturn(Flowable.empty());
+        createCommander("disconnect -s ser1,ser2").execute();
+        verify(farmClient).disconnectFromDevices(eq(Arrays.asList("ser1", "ser2")));
+    }
 }
