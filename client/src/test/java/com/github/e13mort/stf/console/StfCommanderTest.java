@@ -105,7 +105,7 @@ class StfCommanderTest extends BaseStfCommanderTest {
     @DisplayName("Max api = not_a_number is failed to be parsed in command")
     @ParameterizedTest(name = "Command is {0}")
     @EnumSource(DeviceParamsProducingCommand.class)
-    void testExceptionIsThrownWhenApiIsInvalid(DeviceParamsProducingCommand source) throws Exception {
+    void testExceptionIsThrownWhenApiIsInvalid(DeviceParamsProducingCommand source) {
         assertThrows(ParameterException.class, test(source, "-api not_a_number"));
     }
 
@@ -120,14 +120,14 @@ class StfCommanderTest extends BaseStfCommanderTest {
     @DisplayName("Count = not_a_number is failed to be parsed in command")
     @ParameterizedTest(name = "Command is {0}")
     @EnumSource(DeviceParamsProducingCommand.class)
-    void testInvalidCountPropertyThrowsAnException(DeviceParamsProducingCommand source) throws Exception {
+    void testInvalidCountPropertyThrowsAnException(DeviceParamsProducingCommand source) {
         assertThrows(ParameterException.class, test(source, "-count not_a_number"));
     }
 
     @DisplayName("Void count is failed to be parsed in command")
     @ParameterizedTest(name = "Command is {0}")
     @EnumSource(DeviceParamsProducingCommand.class)
-    void testVoidCountPropertyThrowsAnException(DeviceParamsProducingCommand source) throws Exception {
+    void testVoidCountPropertyThrowsAnException(DeviceParamsProducingCommand source) {
         assertThrows(Exception.class, test(source, "-count -l"));
     }
 
@@ -152,7 +152,7 @@ class StfCommanderTest extends BaseStfCommanderTest {
     @DisplayName("Void name is null in command")
     @ParameterizedTest(name = "Command is {0}")
     @EnumSource(DeviceParamsProducingCommand.class)
-    void testVoidNameThrowsAnException(DeviceParamsProducingCommand source) throws Exception {
+    void testVoidNameThrowsAnException(DeviceParamsProducingCommand source) {
         assertThrows(Exception.class, test(source, "-n"));
     }
 
@@ -188,7 +188,7 @@ class StfCommanderTest extends BaseStfCommanderTest {
 
     @DisplayName("Command connect with '--my' parameter will connect to an active device")
     @Test
-    void testConnectToMyDevice() throws IOException, UnknownCommandException {
+    void testConnectToMyDevice() throws IOException {
         createCommander("connect --my").execute();
         verify(adbRunner).connectToDevice(eq(TEST_DEVICE_REMOTE));
     }
@@ -201,43 +201,43 @@ class StfCommanderTest extends BaseStfCommanderTest {
 
     @DisplayName("connect command will throw the ParameterException if -l param is invalid")
     @Test
-    void testConnectCommandWithInvalidValidCacheParam() throws IOException {
+    void testConnectCommandWithInvalidValidCacheParam() {
          assertThrows(ParameterException.class, () -> createCommander("connect -l str"));
     }
 
     @DisplayName("Connect command with valid -u parameter will be parsed successfully")
     @Test
-    void testValidUrlParamsIsParsed() throws IOException, UnknownCommandException {
+    void testValidUrlParamsIsParsed() throws IOException {
         createCommander("connect -u http://google.com");
     }
 
     @DisplayName("Connect command with valid -f parameter will be parsed successfully")
     @Test
-    void testValidFileParamsIsParsed() throws IOException, UnknownCommandException {
+    void testValidFileParamsIsParsed() throws IOException {
         createCommander("connect -f some/file.json");
     }
 
     @DisplayName("Connect command with invalid -u parameter will throw an error")
     @Test
-    void testInvalidUrlParamsIsFailedToParse() throws IOException, UnknownCommandException {
+    void testInvalidUrlParamsIsFailedToParse() {
         assertThrows(ParameterException.class, () -> createCommander(" connect -u not_a_url"));
     }
 
     @DisplayName("Connect command with empty -u parameter will throw an error")
     @Test
-    void testEmptyUrlParamsIsFailedToParse() throws IOException, UnknownCommandException {
+    void testEmptyUrlParamsIsFailedToParse() {
         assertThrows(ParameterException.class, () -> createCommander(" connect -u"));
     }
 
     @DisplayName("Connect command with empty -f parameter will throw an error")
     @Test
-    void testEmptyFileParamsIsFailedToParse() throws IOException, UnknownCommandException {
+    void testEmptyFileParamsIsFailedToParse() {
         assertThrows(ParameterException.class, () -> createCommander(" connect -u"));
     }
 
     @DisplayName("Disconnect command call disconnectFromAllDevices method")
     @Test
-    void testDisconnectCommand() throws IOException, UnknownCommandException {
+    void testDisconnectCommand() throws IOException {
         createCommander("disconnect").execute();
         verify(farmClient).disconnectFromAllDevices();
     }
